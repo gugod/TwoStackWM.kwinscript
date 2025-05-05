@@ -1,0 +1,21 @@
+{
+    "KPlugin": {
+        "Name": "TwoStackWM",
+        "Description": "TwoStackWM -- all your windows in two stacks.",
+        "Icon": "preferences-system-windows",
+
+        "Authors": [
+            {
+                "Email": "gugod@gugod.org",
+                "Name": "Kang-min Liu"
+            }
+        ],
+        "Id": "twostackwm",
+        "Version": "1.0",
+        "License": "MIT",
+        "Website": "https://github.com/gugod/TwoStackWM.kwinscript"
+    },
+    "X-Plasma-API": "javascript",
+    "X-Plasma-MainScript": "code/main.js",
+    "KPackageStructure": "KWin/Script"
+}
