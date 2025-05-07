@@ -26,6 +26,11 @@ const TwoStackWM = {
         }
     },
 
+    isInSideStack: function(window) {
+        var maxed = workspace.clientArea(KWin.MaximizeArea, window);
+        return window.frameGeometry.x == maxed.x;
+    },
+
     moveToSideStack: function(window) {
         this.moveWindow(window, this.sideGeometry(window))
     },
@@ -35,7 +40,7 @@ const TwoStackWM = {
     },
 
     moveToMainOrSide: function(window) {
-        if (window.frameGeometry.x == 0) {
+        if (this.isInSideStack(window)) {
             this.moveToMainStack(window);
         } else {
             this.moveToSideStack(window);
