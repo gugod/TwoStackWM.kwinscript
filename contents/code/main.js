@@ -2,8 +2,8 @@ const TwoStackWM = {
     moveWindow: function(window, geometry) {
         window.frameGeometry.x = geometry.x;
         window.frameGeometry.y = geometry.y;
-        window.frameGeometry.height = geometry.height;
         window.frameGeometry.width = geometry.width;
+        window.setMaximize(true, false);
     },
 
     sideGeometry: function(window) {
