@@ -3,6 +3,10 @@ const TwoStackWM = {
         window.frameGeometry = geometry;
     },
 
+    isPortrait: function(geom) {
+        return (geom.width < geom.height);
+    },
+
     sideGeometry: function(window) {
         var maxed = workspace.clientArea(KWin.MaximizeArea, window);
         return {
