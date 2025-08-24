@@ -1,9 +1,6 @@
 const TwoStackWM = {
     moveWindow: function(window, geometry) {
-        window.frameGeometry.x = geometry.x;
-        window.frameGeometry.y = geometry.y;
-        window.frameGeometry.width = geometry.width;
-        window.setMaximize(true, false);
+        window.frameGeometry = geometry;
     },
 
     sideGeometry: function(window) {
@@ -24,6 +21,17 @@ const TwoStackWM = {
             width: 2/3 * maxed.width,
             height: maxed.height
         }
+    },
+
+    isMaxed: function(window) {
+        var maxed = workspace.clientArea(KWin.MaximizeArea, window);
+        var geom = window.frameGeometry;
+        return geom.x == maxed.x && geom.width >= (1/2 * maxed.width);
+    },
+
+    maxify: function(window) {
+        var maxed = workspace.clientArea(KWin.MaximizeArea, window);
+        this.moveWindow(window, maxed);
     },
 
     isInSideStack: function(window) {
@@ -47,11 +55,31 @@ const TwoStackWM = {
         }
     },
 
+    moveToMainOrSideOrMaxed: function(window) {
+        if (this.isMaxed(window)) {
+            this.moveToMainStack(window);
+        } else if (this.isInSideStack(window)) {
+            this.maxify(window);
+        } else {
+            this.moveToSideStack(window);
+        }
+    },
+
     registerShortcuts: function() {
+        registerShortcut(
+            "TwoStackWM: move between main / side / maxed",
+            "TwoStackWM: move between main / side / maxed",
+            "Ctrl+Shift+Alt+Return",
+            function () {
+                const window = workspace.activeWindow;
+                if (window) this.moveToMainOrSideOrMaxed(window);
+            }.bind(this)
+        );
+
         registerShortcut(
             "TwoStackWM: move to main or side stack",
             "TwoStackWM: move to main or side stack",
-            "Ctrl+Shift+Alt+Return",
+            "Ctrl+Alt+Return",
             function () {
                 const window = workspace.activeWindow;
                 if (window) this.moveToMainOrSide(window);
