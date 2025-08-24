@@ -9,28 +9,51 @@ const TwoStackWM = {
 
     sideGeometry: function(window) {
         var maxed = workspace.clientArea(KWin.MaximizeArea, window);
-        return {
-            x: maxed.x,
-            y: maxed.y,
-            width: 1/3 * maxed.width,
-            height: maxed.height
+        if (this.isPortrait(maxed)) {
+            return {
+                x: maxed.x,
+                y: maxed.y,
+                width: maxed.width,
+                height: 1/3 * maxed.height
+            }
+        } else {
+            return {
+                x: maxed.x,
+                y: maxed.y,
+                width: 1/3 * maxed.width,
+                height: maxed.height
+            }
         }
     },
 
     mainGeometry: function(window) {
         var maxed = workspace.clientArea(KWin.MaximizeArea, window);
-        return {
-            x: maxed.x + 1/3 * maxed.width,
-            y: maxed.y,
-            width: 2/3 * maxed.width,
-            height: maxed.height
+        if (this.isPortrait(maxed)) {
+            return {
+                x: maxed.x,
+                y: maxed.y + 1/3 * maxed.height,
+                width: maxed.width,
+                height: 2/3 * maxed.height
+            }
+        } else {
+            return {
+                x: maxed.x + 1/3 * maxed.width,
+                y: maxed.y,
+                width: 2/3 * maxed.width,
+                height: maxed.height
+            }
         }
     },
 
     isMaxed: function(window) {
         var maxed = workspace.clientArea(KWin.MaximizeArea, window);
         var geom = window.frameGeometry;
-        return geom.x == maxed.x && geom.width >= (1/2 * maxed.width);
+        if (this.isPortrait(maxed)) {
+            return geom.y == maxed.y && geom.height >= (1/2 * maxed.height);
+        } else {
+            return geom.x == maxed.x && geom.width >= (1/2 * maxed.width);
+        }
+
     },
 
     maxify: function(window) {
@@ -40,7 +63,14 @@ const TwoStackWM = {
 
     isInSideStack: function(window) {
         var maxed = workspace.clientArea(KWin.MaximizeArea, window);
-        return window.frameGeometry.x == maxed.x;
+        if (this.isPortrait(maxed)) {
+            return (
+                window.frameGeometry.y == maxed.y
+                && window.frameGeometry.height < maxed.height
+            );
+        } else {
+            return window.frameGeometry.x == maxed.x;
+        }
     },
 
     moveToSideStack: function(window) {
@@ -73,7 +103,7 @@ const TwoStackWM = {
         registerShortcut(
             "TwoStackWM: move between main / side / maxed",
             "TwoStackWM: move between main / side / maxed",
-            "Ctrl+Shift+Alt+Return",
+            "Ctrl+Alt+Shift+Return",
             function () {
                 const window = workspace.activeWindow;
                 if (window) this.moveToMainOrSideOrMaxed(window);
